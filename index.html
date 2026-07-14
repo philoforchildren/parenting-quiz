@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一秒鐘測驗：你是哪種教養風格的家長？｜小朱媽媽的哲學飯桌</title>
+
+<!-- Open Graph / 社群連結卡片 -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:site_name" content="小朱媽媽的哲學飯桌">
+<meta property="og:title" content="一秒鐘測驗：你是哪種教養風格的家長？">
+<meta property="og:description" content="六個日常場景，六個直覺反應。2 分鐘看見你的教養本能從哪裡長出來。小朱媽媽的哲學飯桌出品。">
+<meta property="og:url" content="https://philoforchildren.github.io/parenting-quiz/">
+<meta property="og:image" content="https://philoforchildren.github.io/parenting-quiz/cover.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一秒鐘測驗：你是哪種教養風格的家長？">
+<meta name="twitter:description" content="六個日常場景，六個直覺反應。2 分鐘看見你的教養本能從哪裡長出來。">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F0E4;
+    --cream-dark: #EDE3D0;
+    --brown-deep: #2A1A0E;
+    --brown-mid: #6B4226;
+    --amber: #C4813A;
+    --amber-light: #E8C07A;
+    --amber-pale: #F2DDB0;
+    --sage: #7A8C6E;
+    --text: #2A1A0E;
+    --text-light: #6B4226;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background-color: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Decorative grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .brand-tag {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--amber-light);
+    max-width: 120px;
+  }
+
+  .hero-title {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--brown-deep);
+    margin-bottom: 16px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-subtitle {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 40px;
+    max-width: 520px;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin-bottom: 40px;
+    display: none;
+  }
+  .progress-wrap.visible { display: block; }
+  .progress-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--cream-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--amber);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  /* ── Quiz Card ── */
+  .card {
+    background: #FFFDF8;
+    border: 1px solid var(--amber-pale);
+    border-radius: 3px;
+    padding: 40px 36px;
+    box-shadow: 0 4px 32px rgba(42, 26, 14, 0.06);
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .q-number {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .q-text {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--brown-deep);
+    margin-bottom: 10px;
+  }
+
+  .q-context {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    padding-left: 12px;
+    border-left: 2px solid var(--amber-pale);
+    font-style: italic;
+  }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: transparent;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 2px;
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--brown-mid);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--amber);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .option-btn:hover {
+    border-color: var(--amber);
+    color: var(--brown-deep);
+    transform: translateX(4px);
+  }
+  .option-btn:hover::before { opacity: 0.04; }
+
+  .option-btn.selected {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+    color: var(--brown-deep);
+    font-weight: 500;
+  }
+
+  .option-letter {
+    display: inline-block;
+    width: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--amber);
+    letter-spacing: 0.05em;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  /* Next button */
+  .next-wrap {
+    margin-top: 28px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .next-btn {
+    background: var(--brown-deep);
+    color: var(--cream);
+    border: none;
+    padding: 12px 32px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 2px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .next-btn.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .next-btn:hover {
+    background: var(--brown-mid);
+    transform: translateX(3px);
+  }
+  .next-btn svg { transition: transform 0.2s ease; }
+  .next-btn:hover svg { transform: translateX(3px); }
+
+  /* ── Start screen ── */
+  .start-screen { }
+
+  .start-btn {
+    background: var(--amber);
+    color: #fff;
+    border: none;
+    padding: 16px 48px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(196, 129, 58, 0.3);
+  }
+  .start-btn:hover {
+    background: var(--brown-mid);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(196, 129, 58, 0.35);
+  }
+
+  .intro-note {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Decorative divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0;
+    color: var(--amber-light);
+    font-size: 18px;
+    letter-spacing: 0.3em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cream-dark);
+  }
+
+  /* ── Result screen ── */
+  .result-screen { display: none; }
+  .result-screen.visible { display: block; }
+
+  .result-type-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--amber);
+    font-weight: 500;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .result-type-name {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--brown-deep);
+    margin-bottom: 8px;
+  }
+
+  .result-tagline {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--amber);
+    margin-bottom: 24px;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+
+  .result-body {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--brown-mid);
+    margin-bottom: 24px;
+  }
+
+  .result-strength {
+    background: var(--amber-pale);
+    border-left: 3px solid var(--amber);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    border-radius: 0 2px 2px 0;
+  }
+  .result-strength-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .result-strength p {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--brown-deep);
+  }
+
+  .result-next {
+    background: var(--cream-dark);
+    border-radius: 2px;
+    padding: 20px 24px;
+    margin-top: 28px;
+  }
+  .result-next-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .result-next p {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--brown-deep);
+  }
+
+  .cta-section {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .cta-text {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--brown-deep);
+    margin-bottom: 20px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--brown-deep);
+    color: var(--cream);
+    padding: 15px 40px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 20px rgba(42, 26, 14, 0.18);
+  }
+  .cta-btn:hover {
+    background: var(--amber);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(42, 26, 14, 0.2);
+  }
+
+  .retry-btn {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 1px solid var(--cream-dark);
+    transition: color 0.2s ease;
+  }
+  .retry-btn:hover { color: var(--amber); }
+
+  /* Type indicator bars */
+  .type-bars {
+    margin: 24px 0;
+  }
+  .type-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .type-bar-label {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    color: var(--text-light);
+    width: 80px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .type-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .type-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--amber-light);
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+  .type-bar-fill.dominant {
+    background: var(--amber);
+  }
+  .type-bar-pct {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    color: var(--text-light);
+    width: 30px;
+    flex-shrink: 0;
+  }
+
+  /* Ornament */
+  .ornament {
+    text-align: center;
+    color: var(--amber-light);
+    font-size: 20px;
+    letter-spacing: 0.5em;
+    margin: 24px 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 56px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    color: var(--amber-light);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 520px) {
+    .card { padding: 28px 20px; }
+    .container { padding: 32px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Brand -->
+  <div class="brand-tag">小朱媽媽的哲學飯桌</div>
+
+  <!-- Start Screen -->
+  <div id="startScreen" class="start-screen">
+    <h1 class="hero-title">你是哪種教養風格的家長？</h1>
+    <p class="hero-subtitle">
+      六個日常場景，六個直覺反應。<br>
+      沒有對錯，只有誠實的自己。<br>
+      測驗結束，你會看見自己的教養本能從哪裡長出來。
+    </p>
+
+    <div class="card visible" style="margin-bottom: 32px; padding: 28px 32px;">
+      <p style="font-family: 'Noto Sans TC', sans-serif; font-size: 14px; line-height: 1.9; color: var(--brown-mid);">
+        選擇最接近「你實際會說或會做的」那個選項。<br>不是你覺得「應該這樣做」的那個。
+      </p>
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">開始測驗 →</button>
+    <p class="intro-note">約 2 分鐘完成・共 6 題</p>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" style="display:none;">
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">第 1 題，共 6 題</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="card" id="quizCard">
+      <div class="q-number" id="qNumber">Q1</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-context" id="qContext"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="next-wrap">
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+          下一題
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="result-screen">
+    <div class="card visible">
+      <div class="result-type-label">你的教養風格</div>
+      <div class="result-type-name" id="resultName"></div>
+      <div class="result-tagline" id="resultTagline"></div>
+      <div class="result-body" id="resultBody"></div>
+
+      <div class="result-strength">
+        <div class="result-strength-label">你的核心優勢</div>
+        <p id="resultStrength"></p>
+      </div>
+
+      <div class="type-bars" id="typeBars"></div>
+
+      <div class="result-next">
+        <div class="result-next-label">如果你想走得更遠</div>
+        <p id="resultNext"></p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="ornament">✦ ✦ ✦</div>
+      <p class="cta-text" id="ctaText"></p>
+      <button class="cta-btn" onclick="goToBrand()">認識哲學飯桌 →</button>
+      <br>
+      <span class="retry-btn" onclick="resetQuiz()">重新測驗</span>
+    </div>
+  </div>
+
+  <div class="footer">© 小朱媽媽的哲學飯桌</div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    text: "孩子哭著說「你都偏心弟弟，這樣不公平！」",
+    context: "你剛買了弟弟需要的新鞋，哥哥沒有。",
+    options: [
+      { text: "「有嗎？我對你們都一樣！我哪有偏心？」", type: "A" },
+      { text: "「我說過了，誰需要就買給誰，這是家裡的規定。」", type: "B" },
+      { text: "「你最近是不是覺得媽媽比較少陪你？」先抱抱他。", type: "C" },
+      { text: "「你說的不公平，是指大家拿到的東西要一樣，還是大家都拿到需要的？」", type: "D" }
+    ]
+  },
+  {
+    text: "孩子作業拖到晚上十點還沒寫完，你怎麼辦？",
+    context: "這不是第一次了。你已經提醒了三次。",
+    options: [
+      { text: "忍不住了，開始提高音量催促：「你到底什麼時候要開始！」", type: "A" },
+      { text: "執行之前說好的後果：「說好的，沒寫完不能看電視。」", type: "B" },
+      { text: "先坐下來問他：「今天學校發生什麼事了嗎？你看起來很累。」", type: "C" },
+      { text: "「你是卡在不知道怎麼寫，還是你根本不想寫？我想搞清楚是哪個問題。」", type: "D" }
+    ]
+  },
+  {
+    text: "你發現孩子說謊騙了你，你最在乎的是什麼？",
+    context: "他說作業寫完了，其實根本沒寫。",
+    options: [
+      { text: "他竟然騙我，氣到心臟痛。「你敢騙媽媽！」", type: "A" },
+      { text: "「說謊就是不對，有什麼後果就要承擔什麼後果。」", type: "B" },
+      { text: "「你為什麼不敢跟我說真話？是媽媽讓你覺得說真的很危險嗎？」", type: "C" },
+      { text: "「說謊通常是在保護什麼。你在怕什麼？」", type: "D" }
+    ]
+  },
+  {
+    text: "孩子考試成績出來，比上次退步很多。",
+    context: "他自己也知道考不好，回來就沉默著。",
+    options: [
+      { text: "「你最近到底都在做什麼！這樣怎麼行！」", type: "A" },
+      { text: "「這次退步了，下次要更認真，要不要我們來排讀書計畫？」", type: "B" },
+      { text: "什麼都先不說，走過去摸摸他的頭：「辛苦了，要不要先吃點東西？」", type: "C" },
+      { text: "「你自己覺得這次哪裡出了問題？不是在問答案，我想聽你的判斷。」", type: "D" }
+    ]
+  },
+  {
+    text: "手足兩個人為了同一個玩具吵得不可開交。",
+    context: "一個哭、一個大叫，你剛剛才下班回家。",
+    options: [
+      { text: "「夠了！都給我進房間，誰都不准玩！」", type: "A" },
+      { text: "「輪流用，每個人十五分鐘，從弟弟先開始。」", type: "B" },
+      { text: "先蹲下來抱住哭得比較厲害的那個，讓他感覺到你在。", type: "C" },
+      { text: "「我想知道你們兩個覺得，什麼方法是你們都能接受的？你們自己來想。」", type: "D" }
+    ]
+  },
+  {
+    text: "孩子說：「讀書有什麼用？以後 AI 都會做了。」",
+    context: "你沉默了三秒。然後你說——",
+    options: [
+      { text: "「你不讀書以後要幹嘛！說這種話！」", type: "A" },
+      { text: "「讀書是你現在的責任，該做的事還是要做。」", type: "B" },
+      { text: "「你是不是對學校有點倦了？最近讀起來很有壓力嗎？」", type: "C" },
+      { text: "「你說的有用是什麼意思？你覺得讀書應該要能做到什麼？」", type: "D" }
+    ]
+  }
+];
+
+const results = {
+  A: {
+    name: "情緒先行型",
+    tagline: "你的愛是真的，工具還在路上",
+    body: "你的反應很快，感受很真實——孩子讓你生氣，你就生氣；孩子讓你擔心，你就擔心。這其實是一種生命力，說明你是真的在乎。\n\n只是情緒往往比思考跑得快，讓你在當下說出事後有點後悔的話。不是不愛孩子，是那個當下你先被觸發了，來不及想其他的。",
+    strength: "你不演戲、不假裝。孩子在你身邊感覺到的，是一個真實的大人，而不是一個完美的教養機器人。這份真實，是很多孩子一輩子想要從父母那裡拿到的東西。",
+    next: "下一步不是「控制情緒」，而是在情緒來的時候，多一個0.5秒的間隙——問自己：這件事的本質是什麼？是公平問題、責任問題，還是孩子在傳達一個我還沒聽懂的訊息？",
+    cta: "如果你想練習在情緒來之前，先看懂場景在說什麼——"
+  },
+  B: {
+    name: "規則優先型",
+    tagline: "你給了孩子秩序，他還需要被看見",
+    body: "你說到做到，不輕易妥協，孩子知道你的邊界在哪裡。這種穩定感是很多孩子沒有的——家裡有規則，讓他知道這個世界是可以預測的。\n\n但有時候孩子需要的不是規則，而是有人在規則之前，先看見他為什麼做不到。規則給了秩序，理解給了他繼續的力氣。",
+    strength: "孩子在你身邊知道什麼是「可以」、什麼是「不行」。這份清晰讓他在規則之內有安全感，也讓他在面對外部世界時有一個內建的判斷標準。",
+    next: "試著在執行規則之前，多加一個步驟：好奇一下「他為什麼做不到」。不是為了改變結果，而是讓孩子知道——我在乎的不只是你做了什麼，我也在乎你。",
+    cta: "如果你想找到在規則和連結之間取得平衡的方式——"
+  },
+  C: {
+    name: "關係守護型",
+    tagline: "你懂情感，下一步是幫孩子思考",
+    body: "孩子願意跟你說話——這是很多家長一輩子羨慕的基礎。你直覺地知道先接住感受，不急著解決問題，讓孩子感覺到被看見。\n\n有了這個基礎，下一步可以試著帶孩子往前走一步：情感接住之後，幫他一起看清楚那件事的本質是什麼。讓感受成為思考的起點，而不是終點。",
+    strength: "孩子在情緒崩潰的時候第一個想到的是你。這份安全感不是理所當然的——它是你一次一次選擇先陪伴、不評判，慢慢累積出來的。",
+    next: "在情感連結之後，試著加一個問題：「你覺得這件事背後在談什麼？」不是要給答案，而是讓孩子開始習慣——感受之後，還可以思考。",
+    cta: "如果你想讓情感連結成為哲學對話的基礎——"
+  },
+  D: {
+    name: "哲學導航型",
+    tagline: "你已經走在這條路上了",
+    body: "你習慣往更深的地方問——不只問「發生了什麼」，而是問「這件事背後在談什麼」。你不急著給答案，你給孩子的是一個思考的空間。\n\n這正是哲學式教養的核心：不告訴孩子世界是什麼樣的，而是幫助他練習自己去看清楚。",
+    strength: "孩子在你身邊學到的不只是知識，而是一種思考的姿態——遇到問題先想清楚，再開口。這個能力，比任何技能都更能陪著他走過往後的人生。",
+    next: "你可能已經在做這件事，但還沒有一個完整的框架讓這個方向更有系統。下一步是：把直覺變成方法，讓每次的對話都有意識地在練習某個核心概念。",
+    cta: "如果你想把這個直覺，變成一套可以持續使用的家庭對話方法——"
+  }
+};
+
+let currentQ = 0;
+let answers = [];
+let selectedOption = null;
+
+function startQuiz() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  document.getElementById('progressWrap').classList.add('visible');
+  showQuestion(0);
+}
+
+function showQuestion(index) {
+  const card = document.getElementById('quizCard');
+  card.classList.remove('visible');
+
+  setTimeout(() => {
+    const q = questions[index];
+    document.getElementById('qNumber').textContent = `Q${index + 1}`;
+    document.getElementById('qText').textContent = q.text;
+    document.getElementById('qContext').textContent = q.context;
+    document.getElementById('progressLabel').textContent = `第 ${index + 1} 題，共 ${questions.length} 題`;
+    document.getElementById('progressFill').style.width = `${(index / questions.length) * 100}%`;
+
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="option-letter">${letters[i]}.</span>${opt.text}`;
+      btn.dataset.type = opt.type;
+      btn.onclick = () => selectOption(btn, opt.type);
+      container.appendChild(btn);
+    });
+
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.classList.remove('active');
+    nextBtn.textContent = index === questions.length - 1 ? '看結果' : '下一題';
+    if (index < questions.length - 1) {
+      nextBtn.innerHTML = `下一題 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    } else {
+      nextBtn.innerHTML = `看我的結果 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+
+    selectedOption = null;
+    card.classList.add('visible');
+  }, 200);
+}
+
+function selectOption(btn, type) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOption = type;
+  document.getElementById('nextBtn').classList.add('active');
+}
+
+function nextQuestion() {
+  if (!selectedOption) return;
+  answers.push(selectedOption);
+  currentQ++;
+
+  if (currentQ >= questions.length) {
+    showResult();
+  } else {
+    showQuestion(currentQ);
+  }
+}
+
+function showResult() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('progressWrap').classList.remove('visible');
+
+  const counts = { A: 0, B: 0, C: 0, D: 0 };
+  answers.forEach(a => counts[a]++);
+
+  const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+  const result = results[dominant];
+
+  document.getElementById('resultName').textContent = result.name;
+  document.getElementById('resultTagline').textContent = result.tagline;
+  document.getElementById('resultBody').innerHTML = result.body.replace(/\n\n/g, '<br><br>');
+  document.getElementById('resultStrength').textContent = result.strength;
+  document.getElementById('resultNext').textContent = result.next;
+  document.getElementById('ctaText').textContent = result.cta;
+
+  // Type bars
+  const typeLabels = { A: '情緒先行', B: '規則優先', C: '關係守護', D: '哲學導航' };
+  const barsHtml = Object.entries(counts).map(([type, count]) => {
+    const pct = Math.round((count / questions.length) * 100);
+    const isDom = type === dominant;
+    return `
+      <div class="type-bar-row">
+        <div class="type-bar-label">${typeLabels[type]}</div>
+        <div class="type-bar-track">
+          <div class="type-bar-fill ${isDom ? 'dominant' : ''}" data-pct="${pct}"></div>
+        </div>
+        <div class="type-bar-pct">${pct}%</div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('typeBars').innerHTML = barsHtml;
+
+  const rs = document.getElementById('resultScreen');
+  rs.classList.add('visible');
+
+  // Animate bars after a tick
+  setTimeout(() => {
+    document.querySelectorAll('.type-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 100);
+
+  // Update progress bar to full
+  document.getElementById('progressFill').style.width = '100%';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToBrand() {
+  // 小朱媽媽的哲學飯桌 FB 粉專
+  window.open('https://www.facebook.com/profile.php?id=61577476978719&locale=zh_TW', '_blank');
+}
+
+function resetQuiz() {
+  currentQ = 0;
+  answers = [];
+  selectedOption = null;
+  document.getElementById('resultScreen').classList.remove('visible');
+  document.getElementById('startScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
